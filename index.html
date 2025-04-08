@@ -68,19 +68,30 @@
 
                     addText("Mean: " + mean);
                     addText("Median/Q2: " + getMedian(dataset))
-                    addText("Mode: " + Object.keys((() => {
-                        const frequencies = getFrequencies(dataset);
-                        const maxFrequency = frequencies[max]; // Math.max(...Object.values(frequencies));
 
-                        return Object.keys(frequencies).filter(num => frequencies[num] === maxFrequency);
-                        /*
-                        for (let num in frequencies) {
-                            if (frequencies[num] !== maxFrequency)
-                                delete frequencies[num];
-                        };
-                        */
-                    })()));
-                    addText("Frequencies: " + Object.keys(getFrequencies(dataset)));
+                    {
+                        const frequencies = getFrequencies(dataset);
+
+                        addText("Frequencies: " + Object.entries(frequencies)
+                            .map(([num, count]) => `${num}: ${count}`)
+                            .join(" | "));
+
+                        addText("Mode: " + (() => {
+                            const maxFrequency = Math.max(...Object.values(frequencies));
+
+                            if (maxFrequency === 1)
+                                return "No mode";
+                            else
+                                return Object.keys(frequencies).filter(nth => frequencies[nth] === maxFrequency);
+                            /*
+                            for (let num in frequencies) {
+                                if (frequencies[num] !== maxFrequency)
+                                    delete frequencies[num];
+                            };
+                            */
+                        })());
+                    }
+
                     addText("Min: " + min);
                     addText("Max: " + max);
                     addText("Range: " + (max - min));
