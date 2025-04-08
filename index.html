@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Help with data</title>
+</head>
+
+<body>
+    <input type="text" placeholder="Put dataset here...">
+
+    <script>
+        const textbox = document.querySelector('input')
+
+        function addText(text) {
+            let p = document.createElement("p")
+            p.textContent = text
+            document.body.appendChild(p)
+        }
+
+        /*
+        function clear() {
+            const body = document.body;
+            
+            [...body.children].forEach(child => {
+                if (child !== textbox && child !== document.currentScript) {
+                    body.removeChild(child)
+                }
+            });
+        }
+        */
+
+        function getMedian(array) { // sort
+            const middle = Math.floor(array.length / 2);
+
+            if (array.length % 2)
+                return array[middle];
+            else
+                return (array[middle] + array[middle - 1]) / 2;
+        };
+
+        function getMean(array, length = array.length) {
+            return array.reduce((a, b) => a + b) / length
+        }
+
+        function getFrequencies(array) {
+            const frequencies = {};
+
+            array.forEach((num) => {
+                frequencies[num] = (frequencies[num] || 0) + 1;
+            });
+
+            return frequencies;
+        }
+
+        textbox.addEventListener("keypress", async (input) => {
+            if (input.key === "Enter") {
+                document.querySelectorAll("p").forEach(p => p.remove());
+
+                const data = textbox.value;
+                const dataset = data.match(/\d+/g).map(Number).sort((a, b) => a - b);
+                const dataLength = dataset.length;
+                const min = Math.min(...dataset);
+                const max = Math.max(...dataset);
+
+                if (confirm(`So your dataset is\n${dataset}?`)) {
+                    let mean = getMean(dataset);
+
+                    addText("Mean: " + mean);
+                    addText("Median/Q2: " + getMedian(dataset))
+                    addText("Mode: " + Object.keys((() => {
+                        const frequencies = getFrequencies(dataset);
+                        const maxFrequency = frequencies[max]; // Math.max(...Object.values(frequencies));
+
+                        return Object.keys(frequencies).filter(num => frequencies[num] === maxFrequency);
+                        /*
+                        for (let num in frequencies) {
+                            if (frequencies[num] !== maxFrequency)
+                                delete frequencies[num];
+                        };
+                        */
+                    })()));
+                    addText("Frequencies: " + Object.keys(getFrequencies(dataset)));
+                    addText("Min: " + min);
+                    addText("Max: " + max);
+                    addText("Range: " + (max - min));
+                    addText("Sum: " + dataset.reduce((a, b) => a + b));
+                    addText("Amount: " + dataLength); // Count
+                    addText("Mean Absolute Deviation: " + (() => {
+                        const absoluteDifferences = dataset.map(num => Math.abs(num - mean));
+                        return getMean(absoluteDifferences, dataLength) // absoluteDifferences.reduce((a, b) => a + b) / dataset.length;
+                    })());
+
+                    {
+                        const Q1 = getMedian(dataset.slice(0, Math.floor(dataLength / 2)));
+                        const Q3 = getMedian(dataset.slice(Math.ceil(dataLength / 2)));
+                        addText("Lower Quartile (Q1): " + Q1);
+                        addText("Upper Quartile (Q3): " + Q3);
+                        addText("Interquartile Range (IQR): " + (() => {
+                            return Q3 - Q1;
+                        })());
+                    }
+                } else {
+                    alert("Please try again.")
+                }
+            }
+        })
+
+        /*
+        const frequencies = array.reduce((freq, num) => {
+            freq[num] = (freq[num] || 0) + 1;
+            return freq
+        }, {});
+
+        const max = Math.max(...Object.values(frequencies));
+
+        return Object.keys(frequencies).filter(nth => frequencies[nth] === max);
+        */
+    </script>
+</body>
+
+</html>
