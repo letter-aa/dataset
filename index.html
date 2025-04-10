@@ -72,10 +72,6 @@
                     {
                         const frequencies = getFrequencies(dataset);
 
-                        addText("Frequencies: " + Object.entries(frequencies)
-                            .map(([num, count]) => `${num}: ${count}`)
-                            .join(" | "));
-
                         addText("Mode: " + (() => {
                             const maxFrequency = Math.max(...Object.values(frequencies));
 
@@ -90,6 +86,10 @@
                             };
                             */
                         })());
+
+                        addText("Frequencies: " + Object.entries(frequencies)
+                            .map(([num, count]) => `${num}: ${count}`)
+                            .join(" | "));
                     }
 
                     addText("Min: " + min);
@@ -99,12 +99,14 @@
                     addText("Amount: " + dataLength); // Count
                     addText("Mean Absolute Deviation: " + (() => {
                         const absoluteDifferences = dataset.map(num => Math.abs(num - mean));
+
                         return getMean(absoluteDifferences, dataLength) // absoluteDifferences.reduce((a, b) => a + b) / dataset.length;
                     })());
 
                     {
                         const Q1 = getMedian(dataset.slice(0, Math.floor(dataLength / 2)));
                         const Q3 = getMedian(dataset.slice(Math.ceil(dataLength / 2)));
+
                         addText("Lower Quartile (Q1): " + Q1);
                         addText("Upper Quartile (Q3): " + Q3);
                         addText("Interquartile Range (IQR): " + (() => {
