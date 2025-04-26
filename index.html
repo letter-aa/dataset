@@ -58,7 +58,7 @@
                 document.querySelectorAll("p").forEach(p => p.remove());
 
                 const data = textbox.value;
-                const dataset = data.match(/\d+/g).map(Number).sort((a, b) => a - b);
+                const dataset = data.match(/-?\d*\.?\d+/g).map(Number).sort((a, b) => a - b);
                 const dataLength = dataset.length;
                 const min = Math.min(...dataset);
                 const max = Math.max(...dataset);
